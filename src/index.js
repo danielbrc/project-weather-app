@@ -1,4 +1,5 @@
 import './styles.css';
+import loadingGif from './img/loading.gif';
 
 const weatherKey = 'B8LNWTWQ7U89EYFWCFGEW6TUK';
 const form = document.querySelector('form');
@@ -20,8 +21,25 @@ async function getWeatherReport() {
 
   } catch (error) {
     invalidField.textContent = 'Invalid location name';
+    const mainIcon = document.querySelector('.icon');
+    mainIcon.src = '';
     console.error('OPsie! ', error.message);
   }
+}
+
+function clearTemplate() {
+  const mainTitle = document.querySelector('.main');
+  const textDescription = document.querySelector('.description');
+  const mainIcon = document.querySelector('.icon');
+  const temperature = document.querySelector('.temperature');
+  const conditions = document.querySelector('.conditions');
+  const forecast = document.querySelector('.forecast');
+
+  [mainTitle, textDescription, temperature, conditions, forecast].forEach(item => {
+    item.textContent = '';
+  });
+
+  mainIcon.src = loadingGif;
 }
 
 async function updateTemplate({ resolvedAddress, description, days, currentConditions }) {
@@ -93,6 +111,7 @@ async function getIcon(iconName) {
 }
 
 async function search() {
+  clearTemplate();
   const weatherData = await getWeatherReport();
   if(weatherData){
     updateTemplate(weatherData);
@@ -115,6 +134,7 @@ inputLocation.addEventListener('focus', event => {
 });
 
 async function init() {
+  clearTemplate();
   const weatherData = await getWeatherReport();
   updateTemplate(weatherData);
 }
